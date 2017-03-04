@@ -1,0 +1,60 @@
+mainApp.controller("customerMaster", function ($scope, $http, $filter) {
+    $scope.newCust = {};
+    $scope.totalCust = [];
+    
+    $scope.disableStat = true;
+    $scope.newCust.CST_BLK_ID = $filter('uppercase')($scope.newCust.CST_BLK_ID);
+    $scope.xmlWriter = function (jsonData) {
+        var Json = jsonData;
+        var OpXml = "<?xml version='1.0' encoding='UTF-8'?><root><row>";
+        for (var i = 0; i < Object.keys(Json).length ; i++) {
+            OpXml += "<" + Object.keys(Json)[i] + ">" + Json[Object.keys(Json)[i]] + "</" + Object.keys(Json)[i] + ">";
+        }
+        OpXml += "</row>";
+       
+        OpXml += "</root>";
+        return OpXml;
+    }
+    $scope.pullCustomer = function () {
+        $http({
+            method: "post",
+            url: "ProcessService.asmx/getCustomer",
+            data: ""
+        })
+        .success(function (data) {
+            $scope.totalCust= JSON.parse(data.d)
+
+        })
+    }
+    $scope.pushCustomer = function () {
+        $scope.newCust.CST_ID = $scope.newCust.CST_BLK_ID + $scope.newCust.CST_FLAT_NO;
+        var xmlAjax = $scope.xmlWriter($scope.newCust);
+        $http({
+            method: "post",
+            url: "ProcessService.asmx/pushCustomer",
+            data: { xmlData: xmlAjax }
+        })
+        .success(function (data) {
+            $scope.newCust = {};
+            $scope.pullCustomer();
+        })
+
+    }
+    $scope.updateCustomer = function () {
+
+    }
+    $scope.clearCustomer = function () {
+        $scope.newCust = {};
+        $scope.disableStat = true;
+    }
+    $scope.fnSelectedCust = function (index) {
+
+      //  $scope.newCust = $scope.totalCust[index]
+      //  $scope.disableStat = false;       
+
+    }
+
+    // init calls
+    $scope.pullCustomer();
+
+})
