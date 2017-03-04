@@ -1,0 +1,17 @@
+
+a{
+    font-family:Calibri;
+}
+
+.CustBtn{    
+    border:1px solid #2574A9;
+    
+    padding:6px;
+    transition:0.3s;
+    cursor:pointer;
+
+}
+.CustBtn:hover{
+    padding:10px;
+    font-size:15px;
+}
